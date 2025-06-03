@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations Base de Données - TechRepair Pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .collection-info {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-left-color: #28a745;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .count-badge {
+            background: #007bff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .collection-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .connection-info {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #fff, #f8f9fa);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ Informations Base de Données MongoDB</h1>
+            <h2>TechRepair Pro</h2>
+        </div>
+
+        <div class="info-box connection-info">
+            <h3>📡 Informations de Connexion</h3>
+            <table class="data-table">
+                <tr>
+                    <th>Propriété</th>
+                    <th>Valeur</th>
+                </tr>
+                <tr>
+                    <td><strong>🏷️ Nom de la Base</strong></td>
+                    <td><code>repair_pc</code></td>
+                </tr>
+                <tr>
+                    <td><strong>🌐 Host</strong></td>
+                    <td><code>localhost</code></td>
+                </tr>
+                <tr>
+                    <td><strong>🔌 Port</strong></td>
+                    <td><code>27018</code></td>
+                </tr>
+                <tr>
+                    <td><strong>👤 Utilisateur</strong></td>
+                    <td><code>admin</code></td>
+                </tr>
+                <tr>
+                    <td><strong>🔐 Authentification</strong></td>
+                    <td><code>SCRAM-SHA-256</code></td>
+                </tr>
+                <tr>
+                    <td><strong>📂 Auth Database</strong></td>
+                    <td><code>admin</code></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="info-box collection-info">
+            <h3>📚 Collections Disponibles</h3>
+            <div style="text-align: center; margin: 20px 0;">
+                <span class="collection-badge">📁 categories</span>
+                <span class="collection-badge">🛠️ services</span>
+                <span class="collection-badge">👥 users</span>
+                <span class="collection-badge">📋 repairrequests</span>
+                <span class="collection-badge">📞 contacts</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>📊 Statistiques des Collections</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">📁 Catégories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">🛠️ Services</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">👤 Utilisateurs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">📋 Demandes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">📞 Contacts</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>🔍 Détails des Collections</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Collection</th>
+                        <th>Nombre de Documents</th>
+                        <th>Description</th>
+                        <th>Utilisation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>📁 categories</strong></td>
+                        <td><span class="count-badge">4</span></td>
+                        <td>Types de services (Ordinateurs portables, Bureau, etc.)</td>
+                        <td>Navigation et filtrage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>🛠️ services</strong></td>
+                        <td><span class="count-badge">6</span></td>
+                        <td>Services proposés (Diagnostic, Réparation, etc.)</td>
+                        <td>Catalogue principal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>👥 users</strong></td>
+                        <td><span class="count-badge">1</span></td>
+                        <td>Comptes utilisateurs et administrateurs</td>
+                        <td>Authentification</td>
+                    </tr>
+                    <tr>
+                        <td><strong>📋 repairrequests</strong></td>
+                        <td><span class="count-badge">0</span></td>
+                        <td>Demandes de réparation des clients</td>
+                        <td>Gestion des commandes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>📞 contacts</strong></td>
+                        <td><span class="count-badge">0</span></td>
+                        <td>Messages de contact du site</td>
+                        <td>Support client</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-box">
+            <h3>🔧 Outils de Gestion</h3>
+            <button onclick="testConnection()">🔗 Tester la Connexion</button>
+            <button onclick="showCollectionData()">📊 Afficher les Données</button>
+            <button onclick="window.open('http://localhost:3000/admin/login', '_blank')">👤 Interface Admin</button>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="info-box">
+            <h3>📝 Informations Techniques</h3>
+            <ul>
+                <li><strong>🔧 Moteur de stockage :</strong> WiredTiger</li>
+                <li><strong>📦 Version MongoDB :</strong> Latest (Docker)</li>
+                <li><strong>🐳 Conteneur :</strong> <code>projet_reparation_pc-mongodb-1</code></li>
+                <li><strong>📁 Volume :</strong> Données persistantes</li>
+                <li><strong>🔐 Sécurité :</strong> Authentification activée</li>
+                <li><strong>🌐 Réseau :</strong> Docker internal + port mapping</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 Commandes Utiles</h3>
+            <pre style="background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 5px; overflow-x: auto;">
+# Connexion directe à MongoDB
+docker-compose exec mongodb mongosh --username admin --password password123 --authenticationDatabase admin repair_pc
+
+# Sauvegarder la base
+docker-compose exec mongodb mongodump --username admin --password password123 --authenticationDatabase admin --db repair_pc
+
+# Voir les collections
+docker-compose exec mongodb mongosh --username admin --password password123 --authenticationDatabase admin repair_pc --eval "show collections"
+
+# Compter les documents
+docker-compose exec mongodb mongosh --username admin --password password123 --authenticationDatabase admin repair_pc --eval "db.services.countDocuments()"
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        async function testConnection() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="info-box"><h4>🔄 Test de connexion...</h4></div>';
+
+            try {
+                const response = await fetch('http://localhost:5001/api/categories');
+                const data = await response.json();
+
+                if (response.ok) {
+                    results.innerHTML = `
+                        <div class="info-box collection-info">
+                            <h4>✅ Connexion MongoDB réussie !</h4>
+                            <p>La base <code>repair_pc</code> est accessible via le backend.</p>
+                            <p>Catégories récupérées : ${data.count || data.data?.length || 0}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Erreur API');
+                }
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="info-box" style="background: #f8d7da; border-left-color: #dc3545;">
+                        <h4>❌ Erreur de connexion</h4>
+                        <p>Impossible de se connecter à MongoDB via le backend.</p>
+                        <p>Erreur : ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function showCollectionData() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="info-box"><h4>📊 Récupération des données...</h4></div>';
+
+            try {
+                const [categoriesRes, servicesRes] = await Promise.all([
+                    fetch('http://localhost:5001/api/categories'),
+                    fetch('http://localhost:5001/api/services')
+                ]);
+
+                const categoriesData = await categoriesRes.json();
+                const servicesData = await servicesRes.json();
+
+                const categories = categoriesData.data || categoriesData;
+                const services = servicesData.data || servicesData;
+
+                results.innerHTML = `
+                    <div class="info-box">
+                        <h4>📊 Aperçu des Données</h4>
+                        <h5>📁 Catégories (${categories.length})</h5>
+                        <ul>
+                            ${categories.map(cat => `<li><strong>${cat.nom}</strong> - ${cat.description}</li>`).join('')}
+                        </ul>
+                        <h5>🛠️ Services (${services.length})</h5>
+                        <ul>
+                            ${services.map(service => `<li><strong>${service.titre}</strong> - ${service.prix}€ (${service.duree})</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="info-box" style="background: #f8d7da; border-left-color: #dc3545;">
+                        <h4>❌ Erreur</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Test automatique au chargement
+        window.onload = function() {
+            console.log('🗄️ Informations Base de Données - TechRepair Pro');
+            setTimeout(testConnection, 1000);
+        };
+    </script>
+</body>
+
+</html>

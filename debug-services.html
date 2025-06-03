@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Services - TechRepair Pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-box {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 300px;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔧 Debug Services Frontend - TechRepair Pro</h1>
+
+        <div class="test-box">
+            <h3>🎯 Objectif</h3>
+            <p>Diagnostiquer pourquoi les services ne s'affichent pas dans le frontend React.</p>
+        </div>
+
+        <div class="test-box">
+            <h3>🧪 Tests de Diagnostic</h3>
+            <button onclick="runFullDiagnostic()">🔄 Diagnostic Complet</button>
+            <button onclick="testAPIDirectly()">🔗 Test API Direct</button>
+            <button onclick="simulateReactCode()">⚛️ Simuler Code React</button>
+            <button onclick="testCORS()">🌐 Test CORS</button>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="test-box">
+            <h3>📋 Étapes de Diagnostic</h3>
+            <div class="step">
+                <strong>1. Test API Backend</strong> - Vérifier que l'API retourne les services
+            </div>
+            <div class="step">
+                <strong>2. Test CORS</strong> - Vérifier que le frontend peut accéder à l'API
+            </div>
+            <div class="step">
+                <strong>3. Simulation React</strong> - Reproduire exactement le code du composant
+            </div>
+            <div class="step">
+                <strong>4. Test Structure Données</strong> - Vérifier le format des données
+            </div>
+        </div>
+
+        <div class="test-box">
+            <h3>🔗 Liens de Test</h3>
+            <a href="http://localhost:3000/services" target="_blank">🛠️ Page Services Frontend</a> |
+            <a href="http://localhost:5001/api/services" target="_blank">📡 API Services Backend</a> |
+            <a href="http://localhost:3000" target="_blank">🏠 Accueil Frontend</a>
+        </div>
+    </div>
+
+    <script>
+        function addResult(title, status, content, data = null) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-box ${status}`;
+
+            let html = `<h4>${title}</h4><p>${content}</p>`;
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+
+            div.innerHTML = html;
+            results.appendChild(div);
+        }
+
+        async function testAPIDirectly() {
+            console.log('🔗 Test API Direct...');
+            addResult('🔄 Test API Direct', '', 'Test en cours...');
+
+            try {
+                const response = await fetch('http://localhost:5001/api/services');
+                const data = await response.json();
+
+                if (response.ok) {
+                    addResult(
+                        '✅ API Backend Fonctionnelle',
+                        'success',
+                        `L'API retourne ${data.count || data.data?.length || 0} services avec succès.`, {
+                            status: response.status,
+                            headers: Object.fromEntries(response.headers.entries()),
+                            dataStructure: {
+                                hasData: !!data.data,
+                                hasCount: !!data.count,
+                                isArray: Array.isArray(data.data || data),
+                                firstService: (data.data || data)[0]
+                            }
+                        }
+                    );
+                    return data;
+                } else {
+                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                addResult(
+                    '❌ Erreur API Backend',
+                    'error',
+                    `Impossible d'accéder à l'API: ${error.message}`, {
+                        error: error.message,
+                        stack: error.stack
+                    }
+                );
+                return null;
+            }
+        }
+
+        async function testCORS() {
+            console.log('🌐 Test CORS...');
+            addResult('🔄 Test CORS', '', 'Vérification des politiques CORS...');
+
+            try {
+                const response = await fetch('http://localhost:5001/api/services', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': 'http://localhost:3000'
+                    }
+                });
+
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                };
+
+                if (response.ok) {
+                    addResult(
+                        '✅ CORS Configuré Correctement',
+                        'success',
+                        'Le frontend peut accéder à l\'API sans problème CORS.', {
+                            corsHeaders,
+                            status: response.status
+                        }
+                    );
+                } else {
+                    throw new Error(`Erreur CORS: ${response.status}`);
+                }
+            } catch (error) {
+                addResult(
+                    '❌ Problème CORS Détecté',
+                    'error',
+                    `Erreur CORS: ${error.message}. Le frontend ne peut pas accéder à l'API.`, {
+                        error: error.message
+                    }
+                );
+            }
+        }
+
+        async function simulateReactCode() {
+            console.log('⚛️ Simulation Code React...');
+            addResult('🔄 Simulation React', '', 'Reproduction exacte du code ServicesList...');
+
+            try {
+                // Simulation exacte du code React ServicesList
+                console.log('🔄 Chargement des services et catégories...');
+
+                const [servicesRes, categoriesRes] = await Promise.all([
+                    fetch('http://localhost:5001/api/services'),
+                    fetch('http://localhost:5001/api/categories')
+                ]);
+
+                console.log('📦 Réponse services:', servicesRes);
+                console.log('📦 Réponse catégories:', categoriesRes);
+
+                const servicesData = await servicesRes.json();
+                const categoriesData = await categoriesRes.json();
+
+                console.log('📦 Données services:', servicesData);
+                console.log('📦 Données catégories:', categoriesData);
+
+                // Code exact du composant ServicesList corrigé
+                const services = servicesData.data || servicesData;
+                const categories = categoriesData.data || categoriesData;
+
+                console.log('✅ Services traités:', services);
+                console.log('✅ Catégories traitées:', categories);
+
+                if (Array.isArray(services) && services.length > 0) {
+                    addResult(
+                        '✅ Simulation React Réussie',
+                        'success',
+                        `Le code React fonctionne ! ${services.length} services et ${categories.length} catégories récupérés.`, {
+                            servicesCount: services.length,
+                            categoriesCount: categories.length,
+                            sampleService: services[0],
+                            sampleCategory: categories[0],
+                            codeUsed: 'const services = servicesData.data || servicesData;'
+                        }
+                    );
+
+                    // Afficher les services comme dans React
+                    let servicesHTML = '<div style="margin-top: 20px;"><h5>Services récupérés:</h5>';
+                    services.forEach(service => {
+                        servicesHTML += `
+                            <div class="service-card">
+                                <strong>${service.titre}</strong><br>
+                                ${service.description}<br>
+                                <span style="color: #28a745; font-weight: bold;">${service.prix}€ - ${service.duree}</span><br>
+                                <small>Catégorie: ${service.categorie?.nom || 'Non définie'}</small>
+                            </div>
+                        `;
+                    });
+                    servicesHTML += '</div>';
+
+                    const resultsDiv = document.getElementById('results');
+                    const lastResult = resultsDiv.lastElementChild;
+                    lastResult.innerHTML += servicesHTML;
+
+                } else {
+                    throw new Error('Aucun service trouvé ou format incorrect');
+                }
+            } catch (error) {
+                addResult(
+                    '❌ Erreur Simulation React',
+                    'error',
+                    `Erreur dans la simulation: ${error.message}`, {
+                        error: error.message,
+                        stack: error.stack
+                    }
+                );
+            }
+        }
+
+        async function runFullDiagnostic() {
+            console.log('🔄 Diagnostic Complet...');
+
+            // Nettoyer les résultats précédents
+            document.getElementById('results').innerHTML = '';
+
+            addResult('🔄 DÉBUT DU DIAGNOSTIC', '', 'Lancement du diagnostic complet...');
+
+            // Test 1: API Direct
+            const apiData = await testAPIDirectly();
+
+            // Test 2: CORS
+            await testCORS();
+
+            // Test 3: Simulation React
+            await simulateReactCode();
+
+            // Résumé
+            if (apiData) {
+                addResult(
+                    '📋 RÉSUMÉ DU DIAGNOSTIC',
+                    'success',
+                    'Si tous les tests sont verts, le problème vient probablement du cache du navigateur ou d\'une erreur JavaScript dans la console. Ouvrez la console du navigateur (F12) sur http://localhost:3000/services pour voir les erreurs.'
+                );
+            } else {
+                addResult(
+                    '📋 RÉSUMÉ DU DIAGNOSTIC',
+                    'error',
+                    'L\'API backend ne fonctionne pas correctement. Vérifiez que le backend est démarré et accessible.'
+                );
+            }
+        }
+
+        // Test automatique au chargement
+        window.onload = function() {
+            console.log('🔧 Debug Services Frontend - TechRepair Pro');
+            setTimeout(runFullDiagnostic, 1000);
+        };
+    </script>
+</body>
+
+</html>

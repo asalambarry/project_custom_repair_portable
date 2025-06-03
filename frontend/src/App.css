@@ -18,3 +18,54 @@ main {
     max-width: 1200px;
     margin: 0 auto;
 }
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1 0 auto;
+    padding-top: 80px;
+    /* Hauteur de la navbar */
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Animations globales */
+
+* {
+    transition: all 0.3s ease;
+}
+
+
+/* Scrollbar personnalisée */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff88;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00cc6a;
+}

@@ -1,16 +1,28 @@
 version: '3.8'
 
 services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password123
+    networks:
+      - app-network
+
   backend:
     build: ./backend
     ports:
-      - "3000:3000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - "5001:5000"
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/repair_pc
-      - PORT=3000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/repair_pc?authSource=admin
+      - JWT_SECRET=votre_secret_jwt
+      - JWT_EXPIRES_IN=24h
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=admin123
     depends_on:
       - mongodb
     networks:
@@ -19,21 +31,11 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5001
     depends_on:
       - backend
-    networks:
-      - app-network
-
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongodb_data:/data/db
     networks:
       - app-network
 

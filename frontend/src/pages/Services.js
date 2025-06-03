@@ -1,10 +1,10 @@
 import React from 'react';
-import ServiceList from '../components/ServiceList';
+import ServicesList from '../components/ServicesList';
 
 const Services = () => {
   return (
     <div className="services-page">
-      <ServiceList />
+      <ServicesList />
     </div>
   );
 };

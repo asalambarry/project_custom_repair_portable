@@ -1,75 +1,130 @@
 const Service = require('../models/Service');
 
-// Obtenir tous les services
+// Obtenir tous les services (public)
 exports.getAllServices = async (req, res) => {
   try {
-    const services = await Service.find();
-    res.json(services);
+    const { search, categorie } = req.query;
+    let query = {};
+
+    // Ajout de la recherche par titre ou description
+    if (search) {
+      query.$or = [
+        { titre: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    // Filtrage par catégorie
+    if (categorie) {
+      query.categorie = categorie;
+    }
+
+    const services = await Service.find(query)
+      .populate('categorie', 'nom description icone')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      status: 'success',
+      count: services.length,
+      data: services
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({
+      status: 'error',
+      message: error.message
+    });
   }
 };
 
-// Créer un nouveau service
-exports.createService = async (req, res) => {
-  const service = new Service({
-    nom: req.body.nom,
-    description: req.body.description,
-    prix: req.body.prix
-  });
-
-  try {
-    const nouveauService = await service.save();
-    res.status(201).json(nouveauService);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-// Obtenir un service spécifique
+// Obtenir un service par ID (public)
 exports.getServiceById = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
-    if (service) {
-      res.json(service);
-    } else {
-      res.status(404).json({ message: 'Service non trouvé' });
+    const service = await Service.findById(req.params.id)
+      .populate('categorie', 'nom description icone');
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service non trouvé'
+      });
     }
+    res.status(200).json({
+      success: true,
+      data: service
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 };
 
-// Mettre à jour un service
+// Créer un nouveau service (admin uniquement)
+exports.createService = async (req, res) => {
+  try {
+    const service = new Service(req.body);
+    await service.save();
+    const populatedService = await Service.findById(service._id)
+      .populate('categorie', 'nom description icone');
+    res.status(201).json({
+      success: true,
+      data: populatedService,
+      message: 'Service créé avec succès'
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
+
+// Mettre à jour un service (admin uniquement)
 exports.updateService = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
-    if (service) {
-      service.nom = req.body.nom || service.nom;
-      service.description = req.body.description || service.description;
-      service.prix = req.body.prix || service.prix;
+    const service = await Service.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    ).populate('categorie', 'nom description icone');
 
-      const serviceMisAJour = await service.save();
-      res.json(serviceMisAJour);
-    } else {
-      res.status(404).json({ message: 'Service non trouvé' });
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service non trouvé'
+      });
     }
+    res.status(200).json({
+      success: true,
+      data: service,
+      message: 'Service mis à jour avec succès'
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      success: false,
+      error: error.message
+    });
   }
 };
 
-// Supprimer un service
+// Supprimer un service (admin uniquement)
 exports.deleteService = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
-    if (service) {
-      await service.deleteOne();
-      res.json({ message: 'Service supprimé' });
-    } else {
-      res.status(404).json({ message: 'Service non trouvé' });
+    const service = await Service.findByIdAndDelete(req.params.id);
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service non trouvé'
+      });
     }
+    res.status(200).json({
+      success: true,
+      message: 'Service supprimé avec succès'
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 };

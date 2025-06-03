@@ -3,8 +3,169 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #f8f9fa;
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+
+/* Styles pour les cartes de catégories */
+
+.category-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+/* Styles pour les cartes de services */
+
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+}
+
+
+/* Styles pour les titres */
+
+h2,
+h3 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+
+/* Styles pour les prix */
+
+.h5 {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+
+/* Styles pour les catégories */
+
+.text-muted {
+    color: #7f8c8d !important;
+}
+
+
+/* Animation de chargement */
+
+.spinner-border {
+    color: #3498db;
+}
+
+
+/* Styles pour la page d'accueil */
+
+.hero-section {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    padding: 100px 0;
+    margin-bottom: 50px;
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.hero-section .lead {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.services-section {
+    padding: 80px 0;
+}
+
+.hover-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 60px 0 30px;
+}
+
+.footer h5 {
+    color: #3498db;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.footer ul li {
+    margin-bottom: 0.75rem;
+}
+
+.footer a {
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer a:hover {
+    color: #3498db !important;
+}
+
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 0;
+        text-align: center;
+    }
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .hero-section img {
+        margin-top: 2rem;
+    }
+}
+
+
+/* Styles pour la barre de recherche */
+
+.input-group {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+
+/* Style pour le message "Aucun service trouvé" */
+
+.alert-info {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #6c757d;
 }
