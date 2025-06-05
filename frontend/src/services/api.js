@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  baseURL: 'http://localhost:5001/api'
 });
 
 // Intercepteur pour ajouter le token aux requêtes

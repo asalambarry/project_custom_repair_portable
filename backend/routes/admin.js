@@ -104,15 +104,41 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-router.post('/categories', async (req, res) => {
+router.post('/categories', upload.single('image'), async (req, res) => {
   try {
-    const category = new Category(req.body);
+    // Vérifier si les champs requis sont présents
+    if (!req.body.nom || !req.body.description) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Le nom et la description sont requis'
+      });
+    }
+
+    // Préparer les données de la catégorie
+    const categoryData = {
+      nom: req.body.nom,
+      description: req.body.description,
+      image: req.file ? `http://localhost:5001/uploads/${req.file.filename}` : undefined
+    };
+
+    // Créer et sauvegarder la catégorie
+    const category = new Category(categoryData);
     const savedCategory = await category.save();
+
     res.status(201).json({
       status: 'success',
       data: savedCategory
     });
   } catch (error) {
+    // Si l'erreur est due à un nom en double
+    if (error.code === 11000) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Une catégorie avec ce nom existe déjà'
+      });
+    }
+
+    console.error('Erreur création catégorie:', error);
     res.status(400).json({
       status: 'error',
       message: error.message
@@ -120,11 +146,16 @@ router.post('/categories', async (req, res) => {
   }
 });
 
-router.put('/categories/:id', async (req, res) => {
+router.put('/categories/:id', upload.single('image'), async (req, res) => {
   try {
+    const categoryData = {
+      ...req.body,
+      image: req.file ? `http://localhost:5001/uploads/${req.file.filename}` : undefined
+    };
+
     const category = await Category.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      categoryData,
       { new: true }
     );
     res.json({
@@ -170,9 +201,14 @@ router.get('/services', async (req, res) => {
   }
 });
 
-router.post('/services', async (req, res) => {
+router.post('/services', upload.single('image'), async (req, res) => {
   try {
-    const service = new Service(req.body);
+    const serviceData = {
+      ...req.body,
+      image: req.file ? `http://localhost:5001/uploads/${req.file.filename}` : undefined
+    };
+
+    const service = new Service(serviceData);
     const savedService = await service.save();
     res.status(201).json({
       status: 'success',
@@ -186,11 +222,16 @@ router.post('/services', async (req, res) => {
   }
 });
 
-router.put('/services/:id', async (req, res) => {
+router.put('/services/:id', upload.single('image'), async (req, res) => {
   try {
+    const serviceData = {
+      ...req.body,
+      image: req.file ? `http://localhost:5001/uploads/${req.file.filename}` : undefined
+    };
+
     const service = await Service.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      serviceData,
       { new: true }
     );
     res.json({
@@ -223,10 +264,13 @@ router.delete('/services/:id', async (req, res) => {
 // Routes pour les demandes de réparation
 router.get('/repair-requests', async (req, res) => {
   try {
-    const repairRequests = await RepairRequest.find().sort({ createdAt: -1 });
+    const requests = await RepairRequest.find()
+      .populate('categorie', 'nom')
+      .sort({ createdAt: -1 });
+
     res.json({
       status: 'success',
-      data: repairRequests
+      data: requests
     });
   } catch (error) {
     res.status(500).json({
@@ -245,6 +289,42 @@ router.delete('/repair-requests/:id', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// Ajouter cette route avec les autres routes admin
+router.get('/repair-requests', protect, isAdmin, async (req, res) => {
+  try {
+    const requests = await RepairRequest.find()
+      .populate('categorie', 'nom')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      status: 'success',
+      data: requests
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// Route pour créer une demande de réparation (publique)
+router.post('/repair-requests', async (req, res) => {
+  try {
+    const request = new RepairRequest(req.body);
+    await request.save();
+    res.status(201).json({
+      status: 'success',
+      data: request
+    });
+  } catch (error) {
+    res.status(400).json({
       status: 'error',
       message: error.message
     });

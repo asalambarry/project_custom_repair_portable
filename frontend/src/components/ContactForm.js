@@ -29,16 +29,32 @@ const ContactForm = () => {
     setError(null);
     setSuccess(false);
 
+    // Validation côté client
+    if (!formData.nom || !formData.email || !formData.message) {
+      setError('Veuillez remplir tous les champs');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await api.post('/contact', formData);
-      setSuccess(true);
-      setFormData({
-        nom: '',
-        email: '',
-        message: ''
-      });
+      const response = await api.post('/contact', formData);
+
+      if (response.data.success) {
+        setSuccess(true);
+        setFormData({
+          nom: '',
+          email: '',
+          message: ''
+        });
+      } else {
+        setError(response.data.message || 'Une erreur est survenue');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Une erreur est survenue lors de l\'envoi du message');
+      console.error('Erreur lors de l\'envoi:', err);
+      setError(
+        err.response?.data?.message ||
+        'Une erreur est survenue lors de l\'envoi du message. Veuillez réessayer.'
+      );
     } finally {
       setLoading(false);
     }

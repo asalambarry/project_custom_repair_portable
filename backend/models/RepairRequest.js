@@ -18,10 +18,15 @@ const repairRequestSchema = new mongoose.Schema({
     required: [true, 'Le numéro de téléphone est requis'],
     trim: true
   },
-  typeAppareil: {
+  typeMateriel: {
     type: String,
-    required: [true, 'Le type d\'appareil est requis'],
+    required: [true, 'Le type de matériel est requis'],
     trim: true
+  },
+  categorie: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: [true, 'La catégorie est requise']
   },
   description: {
     type: String,
@@ -37,6 +42,8 @@ const repairRequestSchema = new mongoose.Schema({
     enum: ['en_attente', 'en_cours', 'terminee'],
     default: 'en_attente'
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('RepairRequest', repairRequestSchema);

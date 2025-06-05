@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Container, Form, Modal, Row, Tab, Table, Tabs } from 'react-bootstrap';
-import { FaEdit, FaPlus, FaSignOutAlt, FaTrash, FaUpload, FaImage } from 'react-icons/fa';
+import { FaEdit, FaImage, FaPlus, FaSignOutAlt, FaTrash, FaUpload } from 'react-icons/fa';
 import { AuthContext } from '../contexts/AuthContext';
 import './AdminDashboard.css';
+
+const API_URL = 'http://localhost:5001';
 
 const AdminDashboard = () => {
   const [categories, setCategories] = useState([]);
@@ -105,60 +107,57 @@ const AdminDashboard = () => {
 
   const handleSubmit = async (e, type) => {
     e.preventDefault();
+    setError(null);
+
     try {
-      console.log(`💾 Sauvegarde ${type}:`, formData);
-
-      let finalFormData = { ...formData };
-
-      // Upload de l'image si un fichier est sélectionné
-      if (selectedFile) {
-        try {
-          const imageUrl = await uploadImage(selectedFile);
-          finalFormData.image = imageUrl;
-        } catch (error) {
-          setError('Erreur lors de l\'upload de l\'image');
-          return;
-        }
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        setError('Session expirée. Veuillez vous reconnecter.');
+        logout(); // Déconnexion si pas de token
+        return;
       }
 
-      let response;
+      const formDataToSend = new FormData();
+
+      // Ajouter les champs selon le type
       if (type === 'category') {
-        if (selectedItem) {
-          response = await authenticatedFetch(`http://localhost:5001/api/admin/categories/${selectedItem._id}`, {
-            method: 'PUT',
-            body: JSON.stringify(finalFormData)
-          });
-        } else {
-          response = await authenticatedFetch('http://localhost:5001/api/admin/categories', {
-            method: 'POST',
-            body: JSON.stringify(finalFormData)
-          });
-        }
+        formDataToSend.append('nom', formData.nom);
+        formDataToSend.append('description', formData.description);
       } else {
-        if (selectedItem) {
-          response = await authenticatedFetch(`http://localhost:5001/api/admin/services/${selectedItem._id}`, {
-            method: 'PUT',
-            body: JSON.stringify(finalFormData)
-          });
-        } else {
-          response = await authenticatedFetch('http://localhost:5001/api/admin/services', {
-            method: 'POST',
-            body: JSON.stringify(finalFormData)
-          });
-        }
+        formDataToSend.append('titre', formData.titre);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('prix', formData.prix);
+        formDataToSend.append('duree', formData.duree);
+        formDataToSend.append('categorie', formData.categorie);
       }
 
-      if (response && response.ok) {
-        console.log('✅ Sauvegarde réussie');
-        fetchData();
-        handleCloseModal();
-        setError(null);
-      } else {
-        throw new Error('Erreur de sauvegarde');
+      if (selectedFile) {
+        formDataToSend.append('image', selectedFile);
       }
+
+      const response = await fetch(`${API_URL}/api/admin/${type === 'category' ? 'categories' : 'services'}${selectedItem ? `/${selectedItem._id}` : ''}`, {
+        method: selectedItem ? 'PUT' : 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataToSend
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          logout(); // Déconnexion si token invalide
+          throw new Error('Session expirée. Veuillez vous reconnecter.');
+        }
+        throw new Error(data.message || 'Erreur lors de la sauvegarde');
+      }
+
+      await fetchData();
+      handleCloseModal();
     } catch (error) {
-      console.error('❌ Erreur sauvegarde:', error);
-      setError('Erreur lors de la sauvegarde');
+      console.error('Erreur:', error);
+      setError(error.message);
     }
   };
 
@@ -275,7 +274,7 @@ const AdminDashboard = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
             <h1 style={{ color: 'var(--gray-800)', fontFamily: 'var(--font-heading)' }}>
-              🛡️ Administration TechRepair Pro
+              🛡️ Administration SPI Service Plus
             </h1>
             <p className="text-muted">Gestion des services, catégories et demandes</p>
           </div>

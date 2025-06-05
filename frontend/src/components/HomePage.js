@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
-import { FaArrowRight, FaClock, FaEuroSign, FaLaptop, FaMobileAlt, FaStar, FaTools, FaUsers, FaWrench } from 'react-icons/fa';
+import { FaArrowRight, FaLaptop, FaMobileAlt, FaStar, FaTools, FaUsers, FaWrench } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 
@@ -8,79 +8,53 @@ const HomePage = () => {
   const [popularServices, setPopularServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Images spécialisées pour la réparation PC
+  // Images professionnelles de réparation PC
   const pcRepairImages = {
-    diagnostic: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    screen: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    motherboard: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    laptop: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    repair: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    data: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+    diagnostic: 'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    repair: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    workshop: 'https://images.unsplash.com/photo-1581092583537-20d51b4b4f1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
   };
 
-  useEffect(() => {
-    const fetchPopularServices = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/api/services');
-        const data = await response.json();
-        const services = data.data || data;
-
-        // Sélectionner les 3 services les plus populaires (simulation)
-        const popular = services.slice(0, 3).map((service, index) => ({
-          ...service,
-          rating: 4.8 - (index * 0.1),
-          image: Object.values(pcRepairImages)[index] || service.image
-        }));
-
-        setPopularServices(popular);
-        setLoading(false);
-      } catch (error) {
-        console.error('Erreur lors du chargement des services:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchPopularServices();
-  }, []);
-
+  // Stats mis à jour
   const stats = [
-    { icon: FaUsers, number: '500+', label: 'Clients Satisfaits' },
-    { icon: FaLaptop, number: '1000+', label: 'Réparations Effectuées' },
+    { icon: FaUsers, number: '2000+', label: 'Clients Satisfaits' },
+    { icon: FaLaptop, number: '5000+', label: 'Réparations Réussies' },
     { icon: FaStar, number: '4.9/5', label: 'Note Moyenne' },
-    { icon: FaTools, number: '5 ans', label: 'D\'Expérience' }
+    { icon: FaTools, number: '10 ans', label: 'D\'Expertise' }
   ];
 
+  // Caractéristiques mises à jour
   const features = [
     {
       icon: FaWrench,
-      title: 'Réparation Rapide',
-      description: 'Diagnostic et réparation en 24h pour la plupart des pannes'
+      title: 'Diagnostic Professionnel',
+      description: 'Analyse complète de votre matériel par nos experts certifiés'
     },
     {
       icon: FaUsers,
-      title: 'Experts Certifiés',
-      description: 'Techniciens qualifiés avec 5+ ans d\'expérience'
+      title: 'Service Premium',
+      description: 'Intervention rapide et garantie sur toutes nos réparations'
     },
     {
       icon: FaMobileAlt,
-      title: 'Devis Gratuit',
-      description: 'Estimation gratuite et transparente avant toute intervention'
+      title: 'Suivi Personnalisé',
+      description: 'Devis détaillé gratuit et suivi en temps réel de votre réparation'
     }
   ];
 
   return (
     <div className="homepage">
-      {/* Hero Section */}
+      {/* Section Hero */}
       <section className="hero-section">
         <Container>
           <Row className="align-items-center min-vh-100">
             <Col lg={6} className="hero-content">
               <div className="fade-in-left">
                 <h1 className="hero-title">
-                  Dépannage <span className="text-gradient">Informatique</span>
+                  SPI Service Plus <span className="text-gradient">Réparation Informatique</span>
                 </h1>
                 <p className="hero-subtitle">
-                  Du Mardi au Samedi de 9h à 12h et de 14h à 18h
+                  Votre expert en réparation d'ordinateurs et maintenance informatique
                 </p>
                 <div className="hero-buttons">
                   <Button
@@ -104,13 +78,13 @@ const HomePage = () => {
               <div className="fade-in-right">
                 <div className="floating-card">
                   <img
-                    src={pcRepairImages.repair}
-                    alt="Réparation PC"
+                    src={pcRepairImages.workshop}
+                    alt="Atelier de réparation SPI Service Plus"
                     className="img-fluid rounded-4 shadow-elegant"
                   />
                   <div className="floating-badge">
                     <FaStar className="text-warning" />
-                    <span className="ms-2">4.9/5 - 500+ avis</span>
+                    <span className="ms-2">4.9/5 - Plus de 2000 clients satisfaits</span>
                   </div>
                 </div>
               </div>
@@ -119,157 +93,49 @@ const HomePage = () => {
         </Container>
       </section>
 
-      {/* Services Populaires */}
-      <section className="popular-services-section section-content">
+      {/* Section Services */}
+      <section className="services-section section-content">
         <Container>
           <div className="text-center mb-5">
-            <h2 className="section-title text-gradient">Services Les Plus Populaires</h2>
+            <h2 className="section-title">Nos Services Spécialisés</h2>
             <p className="section-subtitle">
-              Découvrez nos services de réparation les plus demandés par nos clients
+              Des solutions professionnelles pour tous vos besoins informatiques
             </p>
           </div>
 
-          {loading ? (
-            <div className="text-center">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Chargement...</span>
-              </div>
-            </div>
-          ) : (
-            <Row className="g-4">
-              {popularServices.map((service, index) => (
-                <Col key={service._id} lg={4} md={6} className="mb-4">
-                  <Card className="service-card-popular card-elegant h-100" style={{animationDelay: `${index * 0.2}s`}}>
-                    <div className="service-image-wrapper">
-                      <Card.Img
-                        variant="top"
-                        src={service.image}
-                        className="service-image-popular"
-                        alt={service.titre}
-                      />
-                      <div className="popular-badge">
-                        <FaStar className="me-1" />
-                        {service.rating}
-                      </div>
-                    </div>
-                    <Card.Body className="d-flex flex-column">
-                      <Card.Title className="service-title-popular">
-                        {service.titre}
-                      </Card.Title>
-                      <Card.Text className="service-description-popular flex-grow-1">
-                        {service.description}
-                      </Card.Text>
-                      <div className="service-meta">
-                        <div className="service-price-popular">
-                          <FaEuroSign className="me-1" />
-                          <span className="price-amount">{service.prix}€</span>
-                        </div>
-                        <div className="service-duration-popular">
-                          <FaClock className="me-1" />
-                          <span>{service.duree}</span>
-                        </div>
-                      </div>
-                      <Button
-                        as={Link}
-                        to="/reparation"
-                        className="btn-primary-gradient w-100 mt-3"
-                      >
-                        Commander Maintenant
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          )}
-
-          <div className="text-center mt-5">
-            <Button
-              as={Link}
-              to="/services"
-              className="btn-outline-gradient btn-lg"
-            >
-              Voir Tous Nos Services <FaArrowRight className="ms-2" />
-            </Button>
-          </div>
-        </Container>
-      </section>
-
-      {/* Statistiques */}
-      <section className="stats-section gradient-primary">
-        <Container>
           <Row className="g-4">
-            {stats.map((stat, index) => (
-              <Col key={index} lg={3} md={6} className="text-center">
-                <div className="stat-item fade-in-up" style={{animationDelay: `${index * 0.1}s`}}>
-                  <div className="stat-icon">
-                    <stat.icon />
-                  </div>
-                  <h3 className="stat-number">{stat.number}</h3>
-                  <p className="stat-label">{stat.label}</p>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section>
-
-      {/* Pourquoi nous choisir */}
-      <section className="features-section section-content">
-        <Container>
-          <div className="text-center mb-5">
-            <h2 className="section-title">Pourquoi Ordinet ?</h2>
-            <p className="section-subtitle">
-              L'excellence technique au service de vos appareils
-            </p>
-          </div>
-
-          <Row className="g-5">
-            {features.map((feature, index) => (
-              <Col key={index} lg={4} md={6}>
-                <div className="feature-item text-center fade-in-up" style={{animationDelay: `${index * 0.2}s`}}>
-                  <div className="feature-icon gradient-primary">
-                    <feature.icon />
-                  </div>
-                  <h4 className="feature-title">{feature.title}</h4>
-                  <p className="feature-description">{feature.description}</p>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section>
-
-      {/* Call to Action */}
-      <section className="cta-section gradient-secondary">
-        <Container>
-          <Row className="justify-content-center text-center">
-            <Col lg={8}>
-              <div className="cta-content">
-                <h2 className="cta-title">Votre PC a un Problème ?</h2>
-                <p className="cta-subtitle">
-                  Ne laissez pas une panne vous ralentir. Contactez nos experts dès maintenant
-                  pour un diagnostic gratuit et une réparation rapide.
-                </p>
-                <div className="cta-buttons">
-                  <Button
-                    as={Link}
-                    to="/contact"
-                    className="btn-primary-gradient btn-lg me-3"
-                    size="lg"
-                  >
-                    Diagnostic Gratuit
-                  </Button>
-                  <Button
-                    as={Link}
-                    to="/services"
-                    variant="outline-light"
-                    size="lg"
-                  >
-                    Voir Nos Tarifs
-                  </Button>
-                </div>
-              </div>
+            <Col md={4}>
+              <Card className="service-card h-100">
+                <Card.Img variant="top" src={pcRepairImages.diagnostic} alt="Diagnostic PC" />
+                <Card.Body>
+                  <Card.Title>Diagnostic Complet</Card.Title>
+                  <Card.Text>
+                    Analyse approfondie de votre matériel par nos techniciens experts
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card className="service-card h-100">
+                <Card.Img variant="top" src={pcRepairImages.repair} alt="Réparation PC" />
+                <Card.Body>
+                  <Card.Title>Réparation PC</Card.Title>
+                  <Card.Text>
+                    Intervention rapide et professionnelle sur tous types de pannes
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card className="service-card h-100">
+                <Card.Img variant="top" src={pcRepairImages.workshop} alt="Maintenance PC" />
+                <Card.Body>
+                  <Card.Title>Maintenance</Card.Title>
+                  <Card.Text>
+                    Entretien préventif pour optimiser les performances de votre matériel
+                  </Card.Text>
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
         </Container>

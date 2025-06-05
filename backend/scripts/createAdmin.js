@@ -10,7 +10,6 @@ const createAdmin = async () => {
       useUnifiedTopology: true
     });
 
-    // Vérifier si un admin existe déjà
     const adminExists = await User.findOne({ role: 'admin' });
     if (adminExists) {
       console.log('Un administrateur existe déjà');
@@ -20,7 +19,7 @@ const createAdmin = async () => {
     // Créer l'admin
     const admin = new User({
       username: 'admin',
-      password: 'admin123', // À changer après la première connexion
+      password: 'admin123',
       role: 'admin'
     });
 

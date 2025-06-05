@@ -14,9 +14,11 @@ const CategoriesPage = () => {
     const fetchCategories = async () => {
       try {
         const response = await api.get('/categories');
-        setCategories(response.data);
+        setCategories(response.data.data || []);
+        setError(null);
         setLoading(false);
       } catch (err) {
+        console.error('Erreur lors du chargement des catégories:', err);
         setError('Erreur lors du chargement des catégories');
         setLoading(false);
       }
@@ -56,26 +58,42 @@ const CategoriesPage = () => {
 
       <Container className="categories-container">
         <Row>
-          {categories.map((category) => (
-            <Col key={category._id} md={6} lg={4} className="mb-4">
-              <Card className="category-card h-100">
-                <Card.Body>
-                  <div className="category-icon">
-                    <FaTools />
-                  </div>
-                  <Card.Title>{category.nom}</Card.Title>
-                  <Card.Text>{category.description}</Card.Text>
-                  <Link
-                    to={`/services/${category._id}`}
-                    className="btn btn-primary mt-3 d-flex align-items-center justify-content-center"
-                  >
-                    Voir les services
-                    <FaArrowRight className="ms-2" />
-                  </Link>
-                </Card.Body>
-              </Card>
+          {categories && categories.length > 0 ? (
+            categories.map((category) => (
+              <Col key={category._id} md={6} lg={4} className="mb-4">
+                <Card className="category-card h-100">
+                  <Card.Body>
+                    <div className="category-icon">
+                      {category.image ? (
+                        <img
+                          src={category.image}
+                          alt={category.nom}
+                          className="category-image"
+                        />
+                      ) : (
+                        <FaTools />
+                      )}
+                    </div>
+                    <Card.Title>{category.nom}</Card.Title>
+                    <Card.Text>{category.description}</Card.Text>
+                    <Link
+                      to={`/services/${category._id}`}
+                      className="btn btn-primary mt-3 d-flex align-items-center justify-content-center"
+                    >
+                      Voir les services
+                      <FaArrowRight className="ms-2" />
+                    </Link>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))
+          ) : (
+            <Col>
+              <Alert variant="info">
+                Aucune catégorie disponible pour le moment.
+              </Alert>
             </Col>
-          ))}
+          )}
         </Row>
       </Container>
     </div>

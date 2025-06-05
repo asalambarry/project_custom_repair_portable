@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://admin:password123@localho
   useUnifiedTopology: true
 })
 .then(() => console.log('✅ Connecté à MongoDB'))
-.catch(err => console.error('❌ Erreur de connexion à MongoDB:', err));
+.catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
 // Routes
 app.use('/api/services', require('./routes/services'));

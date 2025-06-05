@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, Container, Form } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const RepairForm = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nom: '',
     email: '',
     telephone: '',
     typeMateriel: '',
-    categorie: '',
-    description: ''
+    categorie: location.state?.categoryId || '',
+    description: location.state?.serviceDescription || ''
   });
 
   const [categories, setCategories] = useState([]);
@@ -20,19 +23,11 @@ const RepairForm = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        console.log('🔄 Chargement des catégories...');
         const response = await api.get('/categories');
-        console.log('📦 Réponse reçue:', response);
-
-        const categoriesData = response.data.data || response.data;
-        if (!Array.isArray(categoriesData)) {
-          throw new Error('Format de données invalide');
-        }
-
-        console.log('✅ Catégories chargées:', categoriesData);
-        setCategories(categoriesData);
+        setCategories(response.data.data || []);
+        setError(null);
       } catch (err) {
-        console.error('❌ Erreur lors du chargement des catégories:', err);
+        console.error('Erreur lors du chargement des catégories:', err);
         setError('Erreur lors du chargement des catégories. Veuillez réessayer plus tard.');
       }
     };
@@ -52,7 +47,6 @@ const RepairForm = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
 
     try {
       await api.post('/repair-requests', formData);
@@ -65,8 +59,12 @@ const RepairForm = () => {
         categorie: '',
         description: ''
       });
+
+      // Redirection après 3 secondes
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
     } catch (err) {
-      console.error('Erreur lors de l\'envoi:', err);
       setError(err.response?.data?.message || 'Une erreur est survenue lors de l\'envoi du formulaire');
     } finally {
       setLoading(false);

@@ -1,23 +1,26 @@
 .categories-page {
-    padding: 2rem 0;
+    padding-top: 80px;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
 }
 
 .categories-header {
-    background-color: #f8f9fa;
+    background: var(--primary-gradient);
+    color: white;
     padding: 3rem 0;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
 }
 
 .categories-title {
     font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
+    font-weight: 700;
     margin-bottom: 1rem;
 }
 
 .categories-subtitle {
     font-size: 1.2rem;
-    color: #666;
+    opacity: 0.9;
 }
 
 .categories-container {
@@ -30,43 +33,61 @@
     display: block;
 }
 
-.category-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.category-icon {
-    font-size: 2.5rem;
-    color: #007bff;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.category-card .card-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.category-card .card-text {
-    color: #666;
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
 .categories-loading {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 400px;
+}
+
+.category-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.category-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.category-card .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--gray-800);
+}
+
+.category-card .card-text {
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
 }
 
 @media (max-width: 768px) {

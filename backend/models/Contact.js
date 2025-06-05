@@ -13,11 +13,6 @@ const contactSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Veuillez fournir un email valide']
   },
-  sujet: {
-    type: String,
-    required: [true, 'Le sujet est requis'],
-    trim: true
-  },
   message: {
     type: String,
     required: [true, 'Le message est requis'],
@@ -26,10 +21,6 @@ const contactSchema = new mongoose.Schema({
   dateEnvoi: {
     type: Date,
     default: Date.now
-  },
-  lu: {
-    type: Boolean,
-    default: false
   }
 });
 

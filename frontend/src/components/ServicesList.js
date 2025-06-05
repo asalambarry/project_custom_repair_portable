@@ -4,7 +4,7 @@ import { FaClock, FaEuroSign, FaSearch } from 'react-icons/fa';
 import { Link, useParams } from 'react-router-dom';
 import './ServicesList.css';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'http://localhost:5001';
 
 const ServicesList = () => {
   const [services, setServices] = useState([]);
